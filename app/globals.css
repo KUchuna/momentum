@@ -1,1 +1,168 @@
 @import "tailwindcss";
+@import url('https://free.bboxtype.com/embedfonts/?family=FiraGO:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i');
+
+@font-face {
+    font-family: 'FiraGO Four';
+    src: url('../public/fonts/FiraGO-Four.woff2') format('woff2'),
+        url('../public/fonts/FiraGO-Four.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FiraGO Eight';
+    src: url('../public/fonts/FiraGO-Eight.woff2') format('woff2'),
+        url('../public/fonts/FiraGO-Eight.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FiraGO';
+    src: url('../public/fonts/FiraGO-ExtraBold.woff2') format('woff2'),
+        url('../public/fonts/FiraGO-ExtraBold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FiraGO';
+    src: url('../public/fonts/FiraGO-ExtraLight.woff2') format('woff2'),
+        url('../public/fonts/FiraGO-ExtraLight.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FiraGO';
+    src: url('../public/fonts/FiraGO-Bold.woff2') format('woff2'),
+        url('../public/fonts/FiraGO-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FiraGO Book';
+    src: url('../public/fonts/FiraGO-Book.woff2') format('woff2'),
+        url('../public/fonts/FiraGO-Book.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FiraGO';
+    src: url('../public/fonts/FiraGO-Light.woff2') format('woff2'),
+        url('../public/fonts/FiraGO-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FiraGO';
+    src: url('../public/fonts/FiraGO-UltraLight.woff2') format('woff2'),
+        url('../public/fonts/FiraGO-UltraLight.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FiraGO Hair';
+    src: url('../public/fonts/FiraGO-Hair.woff2') format('woff2'),
+        url('../public/fonts/FiraGO-Hair.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FiraGO';
+    src: url('../public/fonts/FiraGO-SemiBold.woff2') format('woff2'),
+        url('../public/fonts/FiraGO-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FiraGO';
+    src: url('../public/fonts/FiraGO-Thin.woff2') format('woff2'),
+        url('../public/fonts/FiraGO-Thin.woff') format('woff');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FiraGO Two';
+    src: url('../public/fonts/FiraGO-Two.woff2') format('woff2'),
+        url('../public/fonts/FiraGO-Two.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FiraGO';
+    src: url('../public/fonts/FiraGO-Medium.woff2') format('woff2'),
+        url('../public/fonts/FiraGO-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FiraGO';
+    src: url('../public/fonts/FiraGO-Heavy.woff2') format('woff2'),
+        url('../public/fonts/FiraGO-Heavy.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'FiraGO';
+    src: url('../public/fonts/FiraGO-Regular.woff2') format('woff2'),
+        url('../public/fonts/FiraGO-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+* {
+    box-sizing: border-box;
+    font-family: "FiraGO";
+}
+
+@theme {
+    --color-primary: #8338EC;
+    --color-yellow-main: #F7BC30;
+    --color-yellow-secondary: #FFD86D;
+    --color-orange-main: #FB5607;
+    --color-orange-secondary: #FD9A6A;
+    --color-pink-main: #FF006E;
+    --color-pink-secondary: #FF66A8;
+    --color-blue-main: #3A86FF;
+    --color-blue-secondary: #89B6FF;
+    --color-green-main: #08A508;
+    --color-grey-text: #6C757D;
+    --color-red-main: #FA4D4D;
+}
+
+.custom-file-upload {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 12px;
+    cursor: pointer;
+    height: 120px;
+    border-radius: 8px;
+}
