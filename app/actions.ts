@@ -10,5 +10,6 @@ export async function createWorkerAction(formData: FormData) {
       console.log(error);
     } finally {
       revalidatePath("/")
+      revalidatePath("/newassignment")
     }
   }

@@ -1,22 +1,21 @@
 "use client"
 
 import Image from "next/image"
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { createWorker } from "@/api";
 import { createWorkerAction } from "@/app/actions";
 
 const schema = z.object({
     name: z.string()
-      .min(2, "მინიმუმ 2 სიმბოლო")
-      .max(255, "მაქსიმუმ 255 სიმბოლო")
-      .regex(/^[a-zA-Zა-ჰ]+$/, "მხოლოდ ქართული ან ინგლისური ასოებია ნებადართული"),  
+        .min(2, "მინიმუმ 2 სიმბოლო")
+        .max(255, "მაქსიმუმ 255 სიმბოლო")
+        .regex(/^[a-zA-Zა-ჰ]+$/, "მხოლოდ ქართული ან ინგლისური ასოებია ნებადართული"),  
     surname: z.string()
-      .min(2, "მინიმუმ 2 სიმბოლო")
-      .max(255, "მაქსიმუმ 255 სიმბოლო")
-      .regex(/^[a-zA-Zა-ჰ]+$/, "მხოლოდ ქართული ან ინგლისური ასოებია ნებადართული"),
+        .min(2, "მინიმუმ 2 სიმბოლო")
+        .max(255, "მაქსიმუმ 255 სიმბოლო")
+        .regex(/^[a-zA-Zა-ჰ]+$/, "მხოლოდ ქართული ან ინგლისური ასოებია ნებადართული"),
     department_id: z
         .string()
         .transform((val) => Number(val))
@@ -38,7 +37,7 @@ const avatarSchema = z.object({
 });
 
 
-export default function ModalForm({departments, setShowModal}: any) {
+export default function ModalForm({departments, setShowModal}: {departments: {name: string, id: number}[], setShowModal: (value: boolean) => void}) {
 
     const {
         register,

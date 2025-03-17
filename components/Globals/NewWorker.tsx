@@ -4,7 +4,7 @@ import { createPortal } from "react-dom"
 import Image from "next/image"
 import ModalForm from "./ModalForm"
 
-export default function NewWorker({departments}: any) {
+export default function NewWorker({departments}: {departments: {name: string, id: number}[]}) {
     const [mounted, setMounted] = useState(false)
     const [showModal, setShowModal] = useState(false)
     const modalRef = useRef<HTMLDivElement>(null)
