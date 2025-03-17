@@ -7,7 +7,26 @@ export async function getDepartments() {
     return response.json()
 }
 
-export async function createWorker(formData: FormData) {
+export async function getPriorities() {
+    const response = await fetch(`https://momentum.redberryinternship.ge/api/priorities`)
+    return response.json()
+}
+
+export async function getStatuses() {
+    const response = await fetch(`https://momentum.redberryinternship.ge/api/statuses`)
+    return response.json()
+}
+
+export async function getEmployees() {
+    const response = await fetch(`https://momentum.redberryinternship.ge/api/employees`, {
+        headers: {
+            'Authorization': `Bearer ${REDBERRY_API_TOKEN}`, 
+        }
+    })
+    return response.json()
+}
+
+export async function createEmployee(formData: FormData) {
     const response = await fetch(`https://momentum.redberryinternship.ge/api/employees`, {
         method: "POST",
         headers: {

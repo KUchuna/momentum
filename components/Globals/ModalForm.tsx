@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { createWorkerAction } from "@/app/actions";
+import { createEmployeeAction } from "@/app/actions";
 
 const schema = z.object({
     name: z.string()
@@ -115,7 +115,7 @@ export default function ModalForm({departments, setShowModal}: {departments: {na
         }
     
         try {
-            await createWorkerAction(formData);
+            await createEmployeeAction(formData);
             setShowModal(false);
         } catch (error) {
             console.error("Submission failed:", error);

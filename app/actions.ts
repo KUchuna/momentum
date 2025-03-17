@@ -1,11 +1,11 @@
 "use server"
 
-import { createWorker } from "@/api";
+import { createEmployee } from "@/api";
 import { revalidatePath } from "next/cache";
 
-export async function createWorkerAction(formData: FormData) {
+export async function createEmployeeAction(formData: FormData) {
     try {
-      await createWorker(formData);
+      await createEmployee(formData);
     } catch (error) {
       console.log(error);
     } finally {

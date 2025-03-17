@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import NewWorker from "./NewWorker"
+import NewEmployee from "./NewEmployee"
 import { getDepartments } from "@/api"
 
 export default async function Header() {
@@ -13,7 +13,7 @@ export default async function Header() {
                 <Image src="/logos/momentum.png" alt="Momentum Logo" width={210} height={38} />
             </Link>
             <div className="flex gap-10">
-               <NewWorker 
+               <NewEmployee 
                 departments={departments}
                />
                 <Link href="/newassignment">
