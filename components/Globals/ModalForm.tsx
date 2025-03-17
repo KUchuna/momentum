@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { createWorker } from "@/api";
+import { createWorkerAction } from "@/app/actions";
 
 const schema = z.object({
     name: z.string()
@@ -17,10 +18,11 @@ const schema = z.object({
       .max(255, "მაქსიმუმ 255 სიმბოლო")
       .regex(/^[a-zA-Zა-ჰ]+$/, "მხოლოდ ქართული ან ინგლისური ასოებია ნებადართული"),
     department_id: z
-    .string()
-    .refine((value) => value !== "", {
+        .string()
+        .transform((val) => Number(val))
+        .refine((val) => !isNaN(val) && val > 0, {
         message: "დეპარტამენტი უნდა იყოს არჩეული!",
-    }),
+        }),
 });
 
 const avatarSchema = z.object({
@@ -74,47 +76,50 @@ export default function ModalForm({departments, setShowModal}: any) {
         setPreview(null);
     } 
 
+
+
+    function formatZodErrors(errors: z.ZodIssue[]) {
+        return errors.reduce((acc, error) => {
+            if (error.path[0]) {
+                acc[error.path[0]] = error.message;
+            }
+            return acc;
+        }, {} as { [key: string]: string });
+    }
+
     async function handleSubmit(e: React.FormEvent) {
-        e.preventDefault()
+        e.preventDefault();
+    
+        setAvatarErrors({});
         setSubmitErrors({});
+    
         const form = e.currentTarget as HTMLFormElement;
         const formData = new FormData(form);
-
-        const avatar = formData.get("avatar");
-
-        const avatarResult = avatarSchema.safeParse({ avatar });
-
-        const result = schema.safeParse({ name: formData.get("name"), surname: formData.get("surname"), department_id: formData.get("department_id") });
-
-        console.log(form)
-        console.log(formData)
-        
-        if (!avatarResult.success) {
-            const errors: { [key: string]: string } = {};
-            avatarResult.error.errors.forEach((error) => {
-                if (error.path[0]) {
-                    errors[error.path[0]] = error.message;
-                }
-            });
-            setAvatarErrors(errors);
-            if (!result.success) {
-                const fieldErrors: { [key: string]: string } = {};
-                result.error.errors.forEach((error) => {
-                    if (error.path[0]) {
-                        fieldErrors[error.path[0]] = error.message;
-                    }
-                });
-                setSubmitErrors(fieldErrors);
     
+        const avatar = formData.get("avatar");
+        const avatarResult = avatarSchema.safeParse({ avatar });
+    
+        const result = schema.safeParse({
+            name: formData.get("name"),
+            surname: formData.get("surname"),
+            department_id: formData.get("department_id"),
+        });
+    
+        if (!avatarResult.success || !result.success) {
+            if (!avatarResult.success) {
+                setAvatarErrors(formatZodErrors(avatarResult.error.errors));
             }
+            if (!result.success) {
+                setSubmitErrors(formatZodErrors(result.error.errors));
+            }
+            return;
         }
-         else {
-            try {
-                await createWorker(formData);
-                setShowModal(false);
-            } catch (error) {
-                console.error(error);
-            }
+    
+        try {
+            await createWorkerAction(formData);
+            setShowModal(false);
+        } catch (error) {
+            console.error("Submission failed:", error);
         }
     }
 
@@ -134,7 +139,7 @@ export default function ModalForm({departments, setShowModal}: any) {
         <form onSubmit={handleSubmit}>
             <input 
                 className="hidden"
-                value={selectedDepartment?.id}
+                value={selectedDepartment?.id ?? ""}
                 {...register("department_id")}
                 id="department"
             />

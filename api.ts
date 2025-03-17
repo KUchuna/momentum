@@ -11,10 +11,10 @@ export async function createWorker(formData: FormData) {
     const response = await fetch(`https://momentum.redberryinternship.ge/api/employees`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
-            'Authorization': `Bearer ${REDBERRY_API_TOKEN}`,
+            'Authorization': `Bearer ${REDBERRY_API_TOKEN}`, 
         },
-        body: JSON.stringify(formData)
-    })
-    return response.json()
+        body: formData,
+    });
+
+    return response.json();
 }
