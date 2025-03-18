@@ -37,3 +37,15 @@ export async function createEmployee(formData: FormData) {
 
     return response.json();
 }
+
+export async function createTask(formData: FormData) {
+    const response = await fetch(`https://momentum.redberryinternship.ge/api/tasks`, {
+        method: "POST",
+        headers: {
+            'Authorization': `Bearer ${REDBERRY_API_TOKEN}`, 
+        },
+        body: formData,
+    });
+    console.log(formData)
+    return response.json();
+}

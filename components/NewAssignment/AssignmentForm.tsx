@@ -1,15 +1,18 @@
 "use client"
 
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import {useEffect, useState} from "react";
 import NewEmployee from "../Globals/NewEmployee";
+import { createTaskAction } from "@/app/actions";
+import { setPriority } from "os";
+import { useRouter } from "next/navigation";
 
 
 const schema = z.object({
-    title: z.string()
+    name: z.string()
         .min(2, "მინიმუმ 2 სიმბოლო")
         .max(255, "მაქსიმუმ 255 სიმბოლო"),
 
@@ -54,17 +57,30 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
     
     const [submitErrors, setSubmitErrors] = useState<{[key: string]: string}>({});
 
+    const [formData, setFormData] = useState({
+        title: "",
+        priority_id: "",
+        status_id: "",
+        department_id: "",
+        employee_id: "",
+        due_date: "",
+        description: "",
+      });
+
     const {
             register,
             formState: { errors },
             watch,
+            setValue,
         } = useForm({
             resolver: zodResolver(schema),
             mode: "onChange",
     });
     
-    const titleValue = watch("title") || "";
+    const nameValue = watch("name") || "";
     const descriptionValue = watch("description") || "";
+
+    const router = useRouter();
 
     const toggleDropDown = (dropDown: string) => {
         setActiveDropDown(dropDown === activeDropDown ? null : dropDown);
@@ -72,35 +88,68 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
 
     function handlePriorityChange(priority: {id: number, name: string, icon: string}) {
         setSelectedPriority(priority);
+        localStorage.setItem("formData", JSON.stringify({...formData, priority_id: priority.id}));
         setActiveDropDown(null);
     }
     
     function handleStatusChange(status: {id: number, name: string}) {
         setSelectedStatus(status);
+        localStorage.setItem("formData", JSON.stringify({...formData, status_id: status.id}));
         setActiveDropDown(null);
     }
     
     function handleDepartmentChange(department: {id: number, name: string}) {
         setSelectedDepartment(department);
+        const updatedFormData = { ...formData, department_id: department.id };
+
+        localStorage.setItem("formData", JSON.stringify(updatedFormData));
+
+        const formDataWithoutEmployee = { ...updatedFormData, employee_id: "" };
+
+        localStorage.setItem("formData", JSON.stringify(formDataWithoutEmployee));
+
         setSelectedEmployee(null);
         setActiveDropDown(null);
     }
     
     function handleEmployeeChange(employee: {id: number, name: string, surname: string, avatar: string, department: {id: number, name: string}}) {
-        setSelectedEmployee(employee);
+        setSelectedEmployee(employee)
+        localStorage.setItem("formData", JSON.stringify({...formData, employee_id: employee.id}));
         setActiveDropDown(null);
     }
 
+    function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setValue("name", e.target.value);
+        localStorage.setItem("formData", JSON.stringify({...formData, name: e.target.value}));
+    }
+
+    function handleDescriptionChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+        setValue("description", e.target.value);
+        localStorage.setItem("formData", JSON.stringify({...formData, description: e.target.value}));
+    }
+
+    useEffect(() => {
+        const savedData = localStorage.getItem("formData");
+        console.log(savedData)
+        if (savedData) {
+            setFormData(JSON.parse(savedData));
+            setValue("name", JSON.parse(savedData).name);
+            setValue("description", JSON.parse(savedData).description);
+            setSelectedPriority(priorities.find((priority) => priority.id == JSON.parse(savedData).priority_id) || priorities[1]);
+            setSelectedStatus(statuses.find((status) => status.id == JSON.parse(savedData).status_id) || statuses[0]);
+            setSelectedDepartment(departments.find((department) => department.id == JSON.parse(savedData).department_id) || null);
+            setSelectedEmployee(employees.find((employee) => employee.id == JSON.parse(savedData).employee_id) || null);
+        }
+      }, []);
 
 
     async function handleFormSubmit(e: React.FormEvent) {
         e.preventDefault();
-        console.log("assignment form submitted")
         const form = e.currentTarget as HTMLFormElement;
         const formData = new FormData(form);
-    
+
         const result = schema.safeParse({
-            title: formData.get("title"),
+            name: formData.get("name"),
             description: formData.get("description"),
             department_id: formData.get("department_id"),
             employee_id: formData.get("employee_id"),
@@ -122,13 +171,17 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
         }
         
         try {
-            console.log("Form submitted successfully", result.data);
+            await createTaskAction(formData);
         } catch (error) {
-            console.error("Submission error:", error);
+            console.error("Submission failed:", error);
+        } finally {
+            localStorage.removeItem("formData");
+            form.reset();
+            router.push("/");
         }
     }
 
-
+    
     return (
         <form className="py-[4.063rem] px-[3.438rem] bg-[#FBF9FFA6] rounded-[4px] border-[#DDD2FF] border-[1px]" onSubmit={handleFormSubmit} id="assignment-form">
 
@@ -163,19 +216,19 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
             <div className="flex gap-[10rem]">
                 <div className="flex flex-col h-[487px] justify-between w-full">
                     <div className="flex flex-col">
-                        <label className="font-medium" htmlFor="title">სათაური*</label>
-                        <input type="text" {...register("title")} className={`bg-white border-1 border-[#CED4DA] rounded-[6px] outline-none p-[0.875rem] h-[46px] ${submitErrors.title ? "border-red-main" : ""}`} />
+                        <label className="font-medium" htmlFor="name">სათაური*</label>
+                        <input type="text" {...register("name")} className={`bg-white border-1 border-[#CED4DA] rounded-[6px] outline-none p-[0.875rem] h-[46px] ${submitErrors.name ? "border-red-main" : ""}`} value={nameValue} onChange={(e) => handleNameChange(e)}/>
                         <div className="mt-[6px] flex flex-col text-[0.625rem] text-grey-text">
                             <span
                                 className={`flex gap-[2px] items-center ${
-                                    titleValue.length === 0 ? "text-grey-text" : errors.title?.message?.includes("მინიმუმ 2 სიმბოლო") ? "text-red-main" : "text-green-main"
+                                    nameValue.length === 0 ? "text-grey-text" : nameValue.length < 2 ? "text-red-main" : "text-green-main"
                                 }`}
                                 > 
                                 მინიმუმ 2 სიმბოლო
                             </span>
                             <span
                                 className={`flex gap-[2px] items-center ${
-                                    titleValue.length === 0 ? "text-grey-text" : errors.title?.message?.includes("მაქსიმუმ 255 სიმბოლო") ? "text-red-main" : "text-green-main"
+                                    nameValue.length === 0 ? "text-grey-text" : nameValue.length > 255 ? "text-red-main" : "text-green-main"
                                 }`}
                                 >
                                 მაქსიმუმ 255 სიმბოლო
@@ -184,18 +237,18 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                     </div>
                     <div className="flex flex-col">
                         <label className="font-medium" htmlFor="description">აღწერა*</label>
-                        <textarea {...register("description")} className={`bg-white border-1 border-[#CED4DA] rounded-[6px] outline-none p-[0.875rem] h-[133px] resize-none ${submitErrors.description ? "border-red-main" : ""}`}/>
+                        <textarea {...register("description")} className={`bg-white border-1 border-[#CED4DA] rounded-[6px] outline-none p-[0.875rem] h-[133px] resize-none ${submitErrors.description ? "border-red-main" : ""}`} onChange={(e) => handleDescriptionChange(e)}/>
                         <div className="mt-[6px] flex flex-col text-[0.625rem] text-grey-text">
                             <span
                                 className={`flex gap-[2px] items-center ${
-                                    descriptionValue.length === 0 ? "text-grey-text" : errors.description?.message?.includes("აღწერილობა უნდა შეიცავდეს მინიმუმ 4 სიტყვას") ? "text-red-main" : "text-green-main"
+                                    descriptionValue.length === 0 ? "text-grey-text" : descriptionValue.trim().split(/\s+/).length <= 4 ? "text-red-main" : "text-green-main"
                                 }`}
                                 >
                                 მინიმუმ 4 სიტყვას
                             </span>
                             <span
                                 className={`flex gap-[2px] items-center ${
-                                    descriptionValue.length === 0 ? "text-grey-text" : errors.description?.message?.includes("მაქსიმუმ 255 სიმბოლო") ? "text-red-main" : "text-green-main"
+                                    descriptionValue.length === 0 ? "text-grey-text" : descriptionValue.length > 255 ? "text-red-main" : "text-green-main"
                                 }`}
                                 >
                                 მაქსიმუმ 255 სიმბოლო
@@ -289,6 +342,7 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                                 defaultValue={new Date(Date.now() + 86400000*2).toISOString().split("T")[0]}
                                 onClick={(e) => (e.target as HTMLInputElement).showPicker()}
                                 className="outline-none bg-white w-full"
+                                min={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
                             />
                         </div>
                     </div>           
