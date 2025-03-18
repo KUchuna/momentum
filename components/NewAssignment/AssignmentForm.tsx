@@ -1,13 +1,12 @@
 "use client"
 
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import {useEffect, useState} from "react";
 import NewEmployee from "../Globals/NewEmployee";
 import { createTaskAction } from "@/app/actions";
-import { setPriority } from "os";
 import { useRouter } from "next/navigation";
 
 
@@ -183,7 +182,7 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
 
     
     return (
-        <form className="py-[4.063rem] px-[3.438rem] bg-[#FBF9FFA6] rounded-[4px] border-[#DDD2FF] border-[1px]" onSubmit={handleFormSubmit} id="assignment-form">
+        <form className="py-[4.063rem] pl-[3.438rem] pr-[23rem] bg-[#FBF9FFA6] rounded-[4px] border-[#DDD2FF] border-[1px]" onSubmit={handleFormSubmit} id="assignment-form">
 
             <input 
                 className="hidden"
@@ -332,7 +331,7 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                             }
                         </div>
                     </div>}
-                    <div className="flex flex-col">
+                    <div className="flex flex-col w-1/2">
                         <label htmlFor="due_date" className="font-medium">დედლაინი*</label>
                         <div className="bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] cursor-pointer outline-none font-light gap-1">
                             <Image src="/logos/calendar.svg" alt="" width={16} height={16} />
