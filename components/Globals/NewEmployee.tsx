@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import Image from "next/image"
 import ModalForm from "./ModalForm"
-import { set } from "react-hook-form"
 
 export default function NewEmployee({departments, header}: {departments: {name: string, id: number}[], header?: boolean}) {
     const [showModal, setShowModal] = useState(false)
