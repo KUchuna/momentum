@@ -88,7 +88,8 @@ export default function ModalForm({departments, setShowModal}: {departments: {na
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-    
+        e.stopPropagation();
+        
         setAvatarErrors({});
         setSubmitErrors({});
     
@@ -135,7 +136,7 @@ export default function ModalForm({departments, setShowModal}: {departments: {na
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} id="modal-form">
             <input 
                 className="hidden"
                 value={selectedDepartment?.id ?? ""}
@@ -239,7 +240,7 @@ export default function ModalForm({departments, setShowModal}: {departments: {na
             </div>
             <div className="flex justify-end gap-[2.813rem] mt-[65px]">
                 <button className="border-1 border-primary px-4 py-[0.688rem] rounded-[10px] cursor-pointer" onClick={() => setShowModal(false)}>გაუქმება</button>
-                <button className="border-1 border-primary bg-primary px-4 py-[0.688rem] rounded-[10px] text-white cursor-pointer" type="submit">დაამატე თანამშრომელი</button>
+                <button className="border-1 border-primary bg-primary px-4 py-[0.688rem] rounded-[10px] text-white cursor-pointer" type="submit" form="modal-form">დაამატე თანამშრომელი</button>
             </div>
         </form>
     )

@@ -15,6 +15,7 @@ export default async function Header() {
             <div className="flex gap-10">
                <NewEmployee 
                 departments={departments}
+                header
                />
                 <Link href="/newassignment">
                     <button className="px-4 py-2.5 bg-primary text-white border-1 border-primary rounded-[5px] cursor-pointer flex items-center gap-1">

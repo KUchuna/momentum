@@ -3,16 +3,13 @@ import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import Image from "next/image"
 import ModalForm from "./ModalForm"
+import { set } from "react-hook-form"
 
-export default function NewEmployee({departments}: {departments: {name: string, id: number}[]}) {
-    const [mounted, setMounted] = useState(false)
+export default function NewEmployee({departments, header}: {departments: {name: string, id: number}[], header?: boolean}) {
     const [showModal, setShowModal] = useState(false)
     const modalRef = useRef<HTMLDivElement>(null)
     
-
     useEffect(() => {
-        setMounted(true);
-
         const handleClickOutside = (event: MouseEvent) => {
             if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
                 setShowModal(false);
@@ -22,16 +19,20 @@ export default function NewEmployee({departments}: {departments: {name: string, 
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
-            setMounted(false);
         };
     }, []);
 
-    if (!mounted) return null;
+    function handleModal() {
+        setShowModal(true)
+    }
 
     return (
         <>
-            <button className="px-4 py-2.5 border-primary border-1 rounded-[5px] cursor-pointer" onClick={() => setShowModal(true)}>თანამშრომლის შექმნა
+            {header ? <button className="px-4 py-2.5 border-primary border-1 rounded-[5px] cursor-pointer" onClick={() => handleModal()}>თანამშრომლის შექმნა
             </button>
+            :
+            <div className="p-[0.875rem] hover:bg-gray-50 flex gap-[0.375rem] text-primary" onClick={() => handleModal()}><Image src="/logos/addemployee.svg" alt="" width={18} height={18} /> დაამატე თანამშრომელი</div>
+            }
             {showModal && createPortal(
                  <div 
                  className="fixed inset-0 flex justify-center items-center bg-black/15 backdrop-blur-[10px] z-50">

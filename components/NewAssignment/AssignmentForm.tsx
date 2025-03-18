@@ -4,7 +4,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import NewEmployee from "../Globals/NewEmployee";
 
 
 const schema = z.object({
@@ -19,21 +20,17 @@ const schema = z.object({
             message: "აღწერილობა უნდა შეიცავდეს მინიმუმ 4 სიტყვას",
         }),
 
-    priority_id: z.number({
-        required_error: "პრიორიტეტი უნდა იყოს არჩეული!",
-    }),
+    priority_id: z.string(),
 
-    status_id: z.number({
+    status_id: z.string({
         required_error: "სტატუსი უნდა იყოს არჩეული!",
     }),
 
-    department_id: z.number({
-        required_error: "დეპარტამენტი უნდა იყოს არჩეული!",
-    }),
+    department_id: z.string()
+    .min(1, "დეპარტამენტი უნდა იყოს არჩეული!"),
 
-    employee_id: z.number({
-        required_error: "თანამშრომელი უნდა იყოს არჩეული!",
-    }),
+    employee_id: z.string()
+    .min(1, "თანამშრომელი უნდა იყოს არჩეული!"),
     
     due_date: z.string()
         .min(1, "თარიღი აუცილებელია")
@@ -55,6 +52,7 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
     
     const [selectedEmployee, setSelectedEmployee] = useState<{id: number, name: string, surname: string, avatar: string, department: {id: number, name: string}} | null>(null);
     
+    const [submitErrors, setSubmitErrors] = useState<{[key: string]: string}>({});
 
     const {
             register,
@@ -94,12 +92,13 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
     }
 
 
-    function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
 
+    async function handleFormSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        console.log("assignment form submitted")
         const form = e.currentTarget as HTMLFormElement;
         const formData = new FormData(form);
-        
+    
         const result = schema.safeParse({
             title: formData.get("title"),
             description: formData.get("description"),
@@ -109,27 +108,29 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
             status_id: formData.get("status_id"),
             due_date: formData.get("due_date"),
         });
-
+    
         if (!result.success) {
             const fieldErrors: { [key: string]: string } = {};
             result.error.errors.forEach((error) => {
-                if (error.path[0]) {
+                if (error.path.length > 0) {
                     fieldErrors[error.path[0]] = error.message;
                 }
             });
-        }   else {
-                try {
-                    console.log("Form submitted", formData);
-                } catch (error) {
-                    alert(`Error: ${error}`);
-                }
-            }
-
+            setSubmitErrors(fieldErrors);
+            console.log(submitErrors)
+            return;
+        }
+        
+        try {
+            console.log("Form submitted successfully", result.data);
+        } catch (error) {
+            console.error("Submission error:", error);
+        }
     }
 
 
     return (
-        <form className="py-[4.063rem] px-[3.438rem] bg-[#FBF9FFA6] rounded-[4px] border-[#DDD2FF] border-[1px]" onSubmit={handleSubmit}>
+        <form className="py-[4.063rem] px-[3.438rem] bg-[#FBF9FFA6] rounded-[4px] border-[#DDD2FF] border-[1px]" onSubmit={handleFormSubmit} id="assignment-form">
 
             <input 
                 className="hidden"
@@ -159,14 +160,11 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                 id="employee_id"
             />
 
-
-
-
             <div className="flex gap-[10rem]">
                 <div className="flex flex-col h-[487px] justify-between w-full">
                     <div className="flex flex-col">
                         <label className="font-medium" htmlFor="title">სათაური*</label>
-                        <input type="text" {...register("title")} className={`bg-white border-1 border-[#CED4DA] rounded-[6px] outline-none p-[0.875rem] h-[46px]`}/>
+                        <input type="text" {...register("title")} className={`bg-white border-1 border-[#CED4DA] rounded-[6px] outline-none p-[0.875rem] h-[46px] ${submitErrors.title ? "border-red-main" : ""}`} />
                         <div className="mt-[6px] flex flex-col text-[0.625rem] text-grey-text">
                             <span
                                 className={`flex gap-[2px] items-center ${
@@ -186,7 +184,7 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                     </div>
                     <div className="flex flex-col">
                         <label className="font-medium" htmlFor="description">აღწერა*</label>
-                        <textarea {...register("description")} className={`bg-white border-1 border-[#CED4DA] rounded-[6px] outline-none p-[0.875rem] h-[133px] resize-none`}/>
+                        <textarea {...register("description")} className={`bg-white border-1 border-[#CED4DA] rounded-[6px] outline-none p-[0.875rem] h-[133px] resize-none ${submitErrors.description ? "border-red-main" : ""}`}/>
                         <div className="mt-[6px] flex flex-col text-[0.625rem] text-grey-text">
                             <span
                                 className={`flex gap-[2px] items-center ${
@@ -215,7 +213,8 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                                 {activeDropDown == "priority" && <div className="bg-white absolute left-0 origin-top-left bottom-0 translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10">
                                     {priorities.map((priority, index) => {
                                         return (
-                                            <p key={index} className="p-[0.875rem] text-sm font-light hover:bg-gray-50 flex gap-[0.375rem]" onClick={() => handlePriorityChange(priority)} ><Image src={priority.icon} alt="" width={16} height={18} />{priority.name}</p>
+                                            <p key={index} className="p-[0.875rem] text-sm font-light hover:bg-gray-50 flex gap-[0.375rem]" onClick={() => handlePriorityChange(priority)} >
+                                                <Image src={priority.icon} alt="" width={16} height={18} />{priority.name}</p>
                                         )
                                     })}
                                 </div>}
@@ -240,11 +239,11 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                 <div className="flex flex-col h-[487px] justify-between w-full">
                     <div>
                         <span className="font-medium">დეპარტამენტი*</span>
-                        <div className={`bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] cursor-pointer ${errors.department_id ? "border-red-main" : ""}`} onClick={() => toggleDropDown("department")}>
+                        <div className={`bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] cursor-pointer ${submitErrors.department_id ? "border-red-main" : ""}`} onClick={() => toggleDropDown("department")}>
                                 {selectedDepartment?.name}
                             <Image src="/logos/downarrow.svg" alt="" width={14} height={14} className="ml-auto"/>
                             {activeDropDown == "department" && 
-                                <div className="bg-white absolute left-0 origin-top-left bottom-0 translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10">
+                                <div className="bg-white absolute left-0 origin-top-left bottom-[-2px] translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10">
                                     {departments.map((department, index) => {
                                         return (
                                             <p key={index} className="p-[0.875rem] text-sm font-light hover:bg-gray-50 flex gap-[0.375rem]" onClick={() => handleDepartmentChange(department)} >{department.name}</p>
@@ -256,11 +255,16 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                     </div>
                     {selectedDepartment && <div>
                         <span className="font-medium">პასუხისმგებელი თანამშრომელი*</span>
-                        <div className={`bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] cursor-pointer ${errors.employee_id ? "border-red-main" : ""}`} onClick={() => toggleDropDown("employee")}>
+                        <div className={`bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] cursor-pointer ${submitErrors.employee_id ? "border-red-main" : ""}`} onClick={() => toggleDropDown("employee")}>
                                 {selectedEmployee?.name}
                             <Image src="/logos/downarrow.svg" alt="" width={14} height={14} className="ml-auto"/>
-                            {activeDropDown == "employee" && 
-                                <div className="bg-white absolute left-0 origin-top-left bottom-0 translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10">
+                            {activeDropDown == "employee" &&
+                                <div className="bg-white absolute left-0 origin-top-left bottom-[-1px] translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10">
+                                    <div onClick={(e) => (e.stopPropagation())}>
+                                        <NewEmployee 
+                                            departments={departments}
+                                            />
+                                    </div>
                                     {employees
                                     .filter(employee => employee.department.id === selectedDepartment?.id)
                                     .map((employee, index) => (
@@ -290,7 +294,7 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                     </div>           
                 </div>
             </div>
-            <button className="border-1 border-primary bg-primary px-4 py-[0.688rem] rounded-[10px] text-white cursor-pointer ml-auto block mt-[9rem]" type="submit">დავალების შექმნა</button>
+            <button className="border-1 border-primary bg-primary px-4 py-[0.688rem] rounded-[10px] text-white cursor-pointer ml-auto block mt-[9rem]" name="assignment-submit" id="assignment-submit" form="assignment-form">დავალების შექმნა</button>
         </form>
     )
 }
