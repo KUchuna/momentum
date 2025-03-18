@@ -240,7 +240,7 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                         <div className="mt-[6px] flex flex-col text-[0.625rem] text-grey-text">
                             <span
                                 className={`flex gap-[2px] items-center ${
-                                    descriptionValue.length === 0 ? "text-grey-text" : descriptionValue.trim().split(/\s+/).length <= 4 ? "text-red-main" : "text-green-main"
+                                    descriptionValue.length === 0 ? "text-grey-text" : descriptionValue.trim().split(/\s+/).length < 4 ? "text-red-main" : "text-green-main"
                                 }`}
                                 >
                                 მინიმუმ 4 სიტყვას
