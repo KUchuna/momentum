@@ -308,7 +308,14 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                     {selectedDepartment && <div>
                         <span className="font-medium">პასუხისმგებელი თანამშრომელი*</span>
                         <div className={`bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] cursor-pointer ${submitErrors.employee_id ? "border-red-main" : ""}`} onClick={() => toggleDropDown("employee")}>
-                                {selectedEmployee?.name}
+
+                            {selectedEmployee && (
+                                <div className="flex items-center gap-[0.625rem]">
+                                    <Image src={selectedEmployee.avatar} alt="" width={30} height={30}  className="rounded-full min-w-[30px] min-h-[30px] max-w-[30px] max-h-[30px]"/>
+                                    <p className="font-light text-sm">{selectedEmployee.name}</p>
+                                </div>
+                            )}
+                               
                             <Image src="/logos/downarrow.svg" alt="" width={14} height={14} className="ml-auto"/>
                             {activeDropDown == "employee" &&
                                 <div className="bg-white absolute left-0 origin-top-left bottom-[-1px] translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10">
@@ -322,8 +329,9 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                                     .map((employee, index) => (
                                         <p 
                                         key={index} 
-                                        className="p-[0.875rem] text-sm font-light hover:bg-gray-50 flex gap-[0.375rem]" onClick={() => handleEmployeeChange(employee)}
+                                        className="p-[0.875rem] text-sm font-light hover:bg-gray-50 flex gap-[0.625rem] items-center" onClick={() => handleEmployeeChange(employee)}
                                         >
+                                        <Image src={employee.avatar} alt="" width={30} height={30}  className="rounded-full min-w-[30px] min-h-[30px] max-w-[30px] max-h-[30px]"/>
                                         {employee.name}
                                         </p>
                                     ))}
