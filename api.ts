@@ -19,6 +19,7 @@ export async function getStatuses() {
 
 export async function getEmployees() {
     const response = await fetch(`https://momentum.redberryinternship.ge/api/employees`, {
+        cache: 'no-store',
         headers: {
             'Authorization': `Bearer ${REDBERRY_API_TOKEN}`, 
         }
@@ -28,6 +29,17 @@ export async function getEmployees() {
 
 export async function getTasks() {
     const response = await fetch(`https://momentum.redberryinternship.ge/api/tasks`, {
+        cache: 'no-store',
+        headers: {
+            'Authorization': `Bearer ${REDBERRY_API_TOKEN}`, 
+        }
+    })
+    return response.json()
+}
+
+export async function getSingleTask(taskId: string) {
+    const response = await fetch(`https://momentum.redberryinternship.ge/api/tasks/${taskId}`, {
+        cache: 'no-store',
         headers: {
             'Authorization': `Bearer ${REDBERRY_API_TOKEN}`, 
         }
