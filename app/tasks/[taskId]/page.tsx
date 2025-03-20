@@ -1,4 +1,6 @@
 import { getSingleTask } from "@/api"
+import PriorityDepartment from "@/components/HomePage/PriorityDepartment"
+import TaskCommentsSection from "@/components/TaskPage/TaskCommentsSection"
 import TaskInfoSection from "@/components/TaskPage/TaskInfoSection"
 
 export default async function Page({params,}: {params: Promise<{ taskId: string }>}) {
@@ -9,9 +11,18 @@ export default async function Page({params,}: {params: Promise<{ taskId: string 
 
     return (
         <main className="px-[7.5rem] py-10">
-            <TaskInfoSection 
-                task={task}
+            <PriorityDepartment 
+                priority={task.priority}
+                department={task.department}
             />
+            <div className="flex justify-between">
+                <TaskInfoSection 
+                    task={task}
+                />
+                <TaskCommentsSection 
+                
+                />
+            </div>
         </main>
     )
 }
