@@ -32,7 +32,7 @@ const avatarSchema = z.object({
     }).refine((file) => file.size <= 600 * 1024, {
         message: "სურათის ზომა უნდა იყოს 600KB-ზე ნაკლები.",
     }).refine((file) => ["image/png", "image/jpeg"].includes(file.type), {
-        message: "ფორმატი უნდა იყოს PNG ან JPG.",
+        message: "სურათი აუცილებელია და ფორმატი უნდა იყოს PNG ან JPG.",
     })
 });
 
@@ -90,6 +90,7 @@ export default function ModalForm({departments, setShowModal}: {departments: {na
         e.preventDefault();
         e.stopPropagation();
         
+        
         setAvatarErrors({});
         setSubmitErrors({});
     
@@ -104,7 +105,7 @@ export default function ModalForm({departments, setShowModal}: {departments: {na
             surname: formData.get("surname"),
             department_id: formData.get("department_id"),
         });
-    
+        
         if (!avatarResult.success || !result.success) {
             if (!avatarResult.success) {
                 setAvatarErrors(formatZodErrors(avatarResult.error.errors));
@@ -170,6 +171,9 @@ export default function ModalForm({departments, setShowModal}: {departments: {na
                             </svg> 
                             მაქსიმუმ 255 სიმბოლო
                         </span>
+                        <span className="text-red-main">
+                            {submitErrors.name == "მხოლოდ ქართული ან ინგლისური ასოებია ნებადართული" ? submitErrors.name : ""}
+                        </span>
                         </div>
                     </div>
                     <div className="flex flex-col w-full">
@@ -196,6 +200,9 @@ export default function ModalForm({departments, setShowModal}: {departments: {na
                             </svg> 
                             მაქსიმუმ 255 სიმბოლო
                         </span>
+                        <span className="text-red-main">
+                            {submitErrors.surname == "მხოლოდ ქართული ან ინგლისური ასოებია ნებადართული" ? submitErrors.surname : ""}
+                        </span>
                         </div>
                     </div>
                 </div>
@@ -203,7 +210,7 @@ export default function ModalForm({departments, setShowModal}: {departments: {na
                     <span className="font-medium">ავატარი*</span>
                     <label htmlFor="avatar" className={`custom-file-upload border-[1px] border-dashed ${avatarErrors.avatar ? "border-red-main" : "border-[#CED4DA]"} mt-2`}>   
                         <div className="relative">
-                            <Image src={preview ? preview : "/logos/fileupload.svg"} width={preview ? 88 : 24} height={preview ? 88 : 24}alt="" className=" object-cover min-h-[88px] min-w-[88px] max-h-[88px] max-w-[88px] rounded-full"/>
+                            <Image src={preview ? preview : "/logos/fileupload.svg"} width={preview ? 88 : 24} height={preview ? 88 : 24} alt="" priority quality={100} className={`object-cover  ${preview ? "rounded-full min-h-[88px] min-w-[88px] max-h-[88px] max-w-[88px]" : "min-h-[50] min-w-[136px] max-h-[50px] max-w-[136px]"}`}/>
                             {preview ? <Image src="/logos/delete.svg" alt="" width={30} height={30} onClick={(e) => (handleDelete(e))} className="absolute -right-3 bottom-0.5"/> : <></>}
                         </div>
                     </label>
@@ -221,7 +228,7 @@ export default function ModalForm({departments, setShowModal}: {departments: {na
                     <label className={`font-medium `} htmlFor="department">
                         დეპარტამენტი*
                     </label>
-                    <div className={`flex items-center border-1 border-[#CED4DA] rounded-[6px] outline-none px-[0.625rem] py-[0.875rem] cursor-pointer h-[55px] relative ${submitErrors.department_id ? "border-red-main" : ""}`} onClick={() => handleDropwdown()}>
+                    <div className={`flex items-center border-1 border-[#CED4DA] rounded-[6px] outline-none px-[0.625rem] py-[0.875rem] cursor-pointer h-[55px] min-w-max relative ${submitErrors.department_id ? "border-red-main" : ""}`} onClick={() => handleDropwdown()}>
                         <span className="font-normal leading-0">
                             {selectedDepartment?.name && selectedDepartment.name}
                         </span>
@@ -236,6 +243,7 @@ export default function ModalForm({departments, setShowModal}: {departments: {na
                             </div>
                         }
                     </div>
+                    <span></span>
                 </div>
             </div>
             <div className="flex justify-end gap-[2.813rem] mt-[65px]">

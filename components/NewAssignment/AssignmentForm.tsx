@@ -1,7 +1,7 @@
 "use client"
 
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { set, useForm } from "react-hook-form";
+import { number, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import {useEffect, useState} from "react";
@@ -54,14 +54,16 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
     
     const [selectedEmployee, setSelectedEmployee] = useState<{id: number, name: string, surname: string, avatar: string, department: {id: number, name: string}} | null>(null);
     
+    const [selectedDueDate, setSelectedDueDate] = useState<string>(new Date(Date.now() + 86400000).toISOString().split("T")[0]);
+
     const [submitErrors, setSubmitErrors] = useState<{[key: string]: string}>({});
 
     const [formData, setFormData] = useState({
-        title: "",
-        priority_id: "",
-        status_id: "",
-        department_id: "",
-        employee_id: "",
+        name: "",
+        priority_id: 0,
+        status_id: 0,
+        department_id: 0,
+        employee_id: 0,
         due_date: "",
         description: "",
       });
@@ -87,18 +89,21 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
 
     function handlePriorityChange(priority: {id: number, name: string, icon: string}) {
         setSelectedPriority(priority);
+        setFormData({...formData, priority_id: priority.id});
         localStorage.setItem("formData", JSON.stringify({...formData, priority_id: priority.id}));
         setActiveDropDown(null);
     }
     
     function handleStatusChange(status: {id: number, name: string}) {
         setSelectedStatus(status);
+        setFormData({...formData, status_id: status.id});
         localStorage.setItem("formData", JSON.stringify({...formData, status_id: status.id}));
         setActiveDropDown(null);
     }
     
     function handleDepartmentChange(department: {id: number, name: string}) {
         setSelectedDepartment(department);
+        setFormData({...formData, department_id: department.id});
         const updatedFormData = { ...formData, department_id: department.id };
 
         localStorage.setItem("formData", JSON.stringify(updatedFormData));
@@ -113,23 +118,32 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
     
     function handleEmployeeChange(employee: {id: number, name: string, surname: string, avatar: string, department: {id: number, name: string}}) {
         setSelectedEmployee(employee)
+        setFormData({...formData, employee_id: employee.id});
         localStorage.setItem("formData", JSON.stringify({...formData, employee_id: employee.id}));
         setActiveDropDown(null);
     }
 
     function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
         setValue("name", e.target.value);
+        setFormData({...formData, name: e.target.value});
         localStorage.setItem("formData", JSON.stringify({...formData, name: e.target.value}));
     }
 
     function handleDescriptionChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
         setValue("description", e.target.value);
+        setFormData({...formData, description: e.target.value});
         localStorage.setItem("formData", JSON.stringify({...formData, description: e.target.value}));
+    }
+
+    function handleDueDateChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setFormData({...formData, due_date: e.target.value});
+        setSelectedDueDate(e.target.value);
+        localStorage.setItem("formData", JSON.stringify({...formData, due_date: e.target.value}));
     }
 
     useEffect(() => {
         const savedData = localStorage.getItem("formData");
-        console.log(savedData)
+
         if (savedData) {
             setFormData(JSON.parse(savedData));
             setValue("name", JSON.parse(savedData).name);
@@ -138,6 +152,7 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
             setSelectedStatus(statuses.find((status) => status.id == JSON.parse(savedData).status_id) || statuses[0]);
             setSelectedDepartment(departments.find((department) => department.id == JSON.parse(savedData).department_id) || null);
             setSelectedEmployee(employees.find((employee) => employee.id == JSON.parse(savedData).employee_id) || null);
+            setSelectedDueDate(JSON.parse(savedData).due_date || new Date(Date.now() + 86400000).toISOString().split("T")[0]);
         }
       }, []);
 
@@ -236,7 +251,7 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                     </div>
                     <div className="flex flex-col">
                         <label className="font-medium" htmlFor="description">აღწერა*</label>
-                        <textarea {...register("description")} className={`bg-white border-1 border-[#CED4DA] rounded-[6px] outline-none p-[0.875rem] h-[133px] resize-none ${submitErrors.description ? "border-red-main" : ""}`} onChange={(e) => handleDescriptionChange(e)}/>
+                        <textarea {...register("description")} className={`bg-white border-1 border-[#CED4DA] rounded-[6px] outline-none p-[0.875rem] h-[133px] resize-none ${submitErrors.description ? "border-red-main" : ""}`} onChange={(e) => handleDescriptionChange(e)} value={descriptionValue}/>
                         <div className="mt-[6px] flex flex-col text-[0.625rem] text-grey-text">
                             <span
                                 className={`flex gap-[2px] items-center ${
@@ -257,7 +272,7 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                     <div className="flex gap-8">
                         <div className="w-full">
                             <span className="font-medium">პრიორიტეტი*</span>
-                            <div className={`bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] cursor-pointer ${errors.priority_id ? "border-red-main" : ""}`} onClick={() => toggleDropDown("priority")}>
+                            <div className={`bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] cursor-pointer min-w-max ${errors.priority_id ? "border-red-main" : ""}`} onClick={() => toggleDropDown("priority")}>
                                 <div className="flex items-center gap-1">
                                     <Image src={selectedPriority.icon} alt="" width={16} height={18} />{selectedPriority.name}
                                 </div>
@@ -274,10 +289,10 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                         </div>
                         <div className="w-full">
                             <span className="font-medium">სტატუსი*</span>
-                            <div className={`bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] cursor-pointer ${errors.status_id ? "border-red-main" : ""}`} onClick={() => toggleDropDown("status")}>
+                            <div className={`bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] cursor-pointer min-w-max ${errors.status_id ? "border-red-main" : ""}`} onClick={() => toggleDropDown("status")}>
                                 {selectedStatus.name}
                                 <Image src="/logos/downarrow.svg" alt="" width={14} height={14} className="ml-auto"/>
-                                {activeDropDown == "status" && <div className="bg-white absolute left-0 origin-top-left bottom-0 translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10">
+                                {activeDropDown == "status" && <div className="bg-white absolute left-0 origin-top-left bottom-0 translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10 min-w-max">
                                     {statuses.map((status, index) => {
                                         return (
                                             <p key={index} className="p-[0.875rem] text-sm font-light hover:bg-gray-50 flex gap-[0.375rem]" onClick={() => handleStatusChange(status)} >{status.name}</p>
@@ -291,7 +306,7 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                 <div className="flex flex-col h-[487px] justify-between w-full">
                     <div>
                         <span className="font-medium">დეპარტამენტი*</span>
-                        <div className={`bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] cursor-pointer ${submitErrors.department_id ? "border-red-main" : ""}`} onClick={() => toggleDropDown("department")}>
+                        <div className={`bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] cursor-pointer min-h-max ${submitErrors.department_id ? "border-red-main" : ""}`} onClick={() => toggleDropDown("department")}>
                                 {selectedDepartment?.name}
                             <Image src="/logos/downarrow.svg" alt="" width={14} height={14} className="ml-auto"/>
                             {activeDropDown == "department" && 
@@ -318,7 +333,7 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                                
                             <Image src="/logos/downarrow.svg" alt="" width={14} height={14} className="ml-auto"/>
                             {activeDropDown == "employee" &&
-                                <div className="bg-white absolute left-0 origin-top-left bottom-[-1px] translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10">
+                                <div className="bg-white absolute left-0 origin-top-left bottom-[-1px] translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10 min-w-max">
                                     <div onClick={(e) => (e.stopPropagation())}>
                                         <NewEmployee 
                                             departments={departments}
@@ -341,15 +356,16 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                     </div>}
                     <div className="flex flex-col w-1/2">
                         <label htmlFor="due_date" className="font-medium">დედლაინი*</label>
-                        <div className="bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] cursor-pointer outline-none font-light gap-1">
+                        <div className="bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] outline-none font-light gap-1 min-w-max">
                             <Image src="/logos/calendar.svg" alt="" width={16} height={16} />
                             <input
                                 type="date"
                                 {...register("due_date")}
-                                defaultValue={new Date(Date.now() + 86400000*2).toISOString().split("T")[0]}
+                                defaultValue={selectedDueDate}
                                 onClick={(e) => (e.target as HTMLInputElement).showPicker()}
-                                className="outline-none bg-white w-full"
-                                min={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
+                                className="outline-none bg-white w-full cursor-pointer"
+                                min={new Date(Date.now()).toISOString().split("T")[0]}
+                                onChange={(e) => handleDueDateChange(e)}
                             />
                         </div>
                     </div>           
