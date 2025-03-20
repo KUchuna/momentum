@@ -4,7 +4,8 @@ import { Task } from "@/types";
 import Image from "next/image";
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react";
-
+import { format } from 'date-fns';
+import { ka } from 'date-fns/locale';
 
 interface TaskCardProps {
     task: Task
@@ -96,15 +97,11 @@ export default function TaskCard({task}: TaskCardProps) {
 
     const formatDueDate = (dueDate: string) => {
         const date = new Date(dueDate);
-        
-        return new Intl.DateTimeFormat("ka-GE", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }).format(date);
-    };
-
-    const formatedDueDate = formatDueDate(task.due_date)
+      
+        return format(date, "dd MMM, yyyy", { locale: ka });
+      };
+      
+      const formatedDueDate = formatDueDate(task.due_date);
 
     if(!mounted) {
         return null
