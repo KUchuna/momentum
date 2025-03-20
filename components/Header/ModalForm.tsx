@@ -222,7 +222,7 @@ export default function ModalForm({departments, setShowModal}: {departments: {na
                             className="border-[1px] border-gray-300 p-2 rounded-[8px] hidden"
                             onChange={handleUpload}
                         />
-                    {avatarErrors.avatar && <span className="text-red-main text-sm mt-1">{avatarErrors.avatar}</span>}
+                    {avatarErrors.avatar && <span className="text-red-main text-[0.625rem]">{avatarErrors.avatar}</span>}
                 </div>
                 <div className="flex flex-col w-[50%] pr-[2.813rem]">
                     <label className={`font-medium `} htmlFor="department">
@@ -243,7 +243,9 @@ export default function ModalForm({departments, setShowModal}: {departments: {na
                             </div>
                         }
                     </div>
-                    <span></span>
+                    <span className="text-[0.625rem] text-red-main">
+                        {submitErrors.department_id ? "დეპარტამენტი უნდა იყოს არჩეული!" : ""}
+                    </span>
                 </div>
             </div>
             <div className="flex justify-end gap-[2.813rem] mt-[65px]">

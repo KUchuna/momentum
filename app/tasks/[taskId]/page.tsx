@@ -1,4 +1,5 @@
 import { getSingleTask } from "@/api"
+import TaskInfoSection from "@/components/TaskPage/TaskInfoSection"
 
 export default async function Page({params,}: {params: Promise<{ taskId: string }>}) {
     
@@ -8,7 +9,9 @@ export default async function Page({params,}: {params: Promise<{ taskId: string 
 
     return (
         <main className="px-[7.5rem] py-10">
-            My task: {task.name}
+            <TaskInfoSection 
+                task={task}
+            />
         </main>
     )
 }

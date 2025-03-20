@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 
 const schema = z.object({
     name: z.string()
-        .min(2, "მინიმუმ 2 სიმბოლო")
+        .min(3, "მინიმუმ 3 სიმბოლო")
         .max(255, "მაქსიმუმ 255 სიმბოლო"),
 
     description: z.string()
@@ -235,10 +235,10 @@ export default function TaskForm({priorities, statuses, departments, employees}:
                         <div className="mt-[6px] flex flex-col text-[0.625rem] text-grey-text">
                             <span
                                 className={`flex gap-[2px] items-center ${
-                                    nameValue.length === 0 ? "text-grey-text" : nameValue.length < 2 ? "text-red-main" : "text-green-main"
+                                    nameValue.length === 0 ? "text-grey-text" : nameValue.length < 3 ? "text-red-main" : "text-green-main"
                                 }`}
                                 > 
-                                მინიმუმ 2 სიმბოლო
+                                მინიმუმ 3 სიმბოლო
                             </span>
                             <span
                                 className={`flex gap-[2px] items-center ${
@@ -319,8 +319,12 @@ export default function TaskForm({priorities, statuses, departments, employees}:
                                 </div>
                             }
                         </div>
+                        <span className="text-red-main text-[0.625rem]">
+                            {submitErrors.department_id ? submitErrors.department_id : ""}
+                        </span>
                     </div>
-                    {selectedDepartment && <div>
+                    {selectedDepartment && 
+                    <div>
                         <span className="font-medium">პასუხისმგებელი თანამშრომელი*</span>
                         <div className={`bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] cursor-pointer ${submitErrors.employee_id ? "border-red-main" : ""}`} onClick={() => toggleDropDown("employee")}>
 
@@ -346,18 +350,21 @@ export default function TaskForm({priorities, statuses, departments, employees}:
                                         key={index} 
                                         className="p-[0.875rem] text-sm font-light hover:bg-gray-50 flex gap-[0.625rem] items-center" onClick={() => handleEmployeeChange(employee)}
                                         >
-                                        <Image src={employee.avatar} alt="" width={30} height={30}  className="rounded-full min-w-[30px] min-h-[30px] max-w-[30px] max-h-[30px]"/>
+                                        <Image src={employee.avatar} alt="" width={30} height={30}  className="rounded-full min-w-[30px] min-h-[30px] max-w-[30px] max-h-[30px] object-center"/>
                                         {employee.name}
                                         </p>
                                     ))}
                                 </div>
                             }
                         </div>
+                        <span className="text-red-main text-[0.625rem]">
+                            {submitErrors.employee_id ? submitErrors.employee_id : ""}
+                        </span>
                     </div>}
                     <div className="flex flex-col w-1/2">
                         <label htmlFor="due_date" className="font-medium">დედლაინი*</label>
                         <div className="bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] outline-none font-light gap-1 min-w-max">
-                            <Image src="/logos/calendar.svg" alt="" width={16} height={16} />
+                            <Image src="/logos/calendar2.svg" alt="" width={16} height={16} />
                             <input
                                 type="date"
                                 {...register("due_date")}
@@ -366,6 +373,7 @@ export default function TaskForm({priorities, statuses, departments, employees}:
                                 className="outline-none bg-white w-full cursor-pointer"
                                 min={new Date(Date.now()).toISOString().split("T")[0]}
                                 onChange={(e) => handleDueDateChange(e)}
+                                max="2030-01-01"
                             />
                         </div>
                     </div>           

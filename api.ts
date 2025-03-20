@@ -67,6 +67,20 @@ export async function createTask(formData: FormData) {
         },
         body: formData,
     });
-    console.log(formData)
+    return response.json();
+}
+
+export async function updateStatus(taskId: number, statusId: number) {
+    const response = await fetch(`https://momentum.redberryinternship.ge/api/tasks/${taskId}`, {
+        method: "PUT",
+        headers: {
+            'Authorization': `Bearer ${REDBERRY_API_TOKEN}`, 
+            'Accept': 'application/json',
+            'Content-Type': 'application/json', 
+        },
+        body: JSON.stringify({
+            status_id: statusId
+        }),
+    });
     return response.json();
 }
