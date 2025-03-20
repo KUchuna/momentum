@@ -1,7 +1,7 @@
 import { getDepartments, getEmployees, getPriorities, getStatuses } from "@/api";
-import AssignmentForm from "@/components/NewAssignment/AssignmentForm";
+import TaskForm from "@/components/NewTaskPage/TaskForm";
 
-export default async function NewAssignment() {
+export default async function NewTask() {
 
     const priorities = await getPriorities();
     const statuses = await getStatuses();
@@ -11,7 +11,7 @@ export default async function NewAssignment() {
     return (
         <main className="px-[7.5rem] py-10">
             <h1 className="text-4xl font-semibold mb-[1.875rem]">შექმენი ახალი დავალება</h1>
-            <AssignmentForm 
+            <TaskForm 
                 priorities={priorities}
                 statuses={statuses}
                 departments={departments}

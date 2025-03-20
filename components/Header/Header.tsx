@@ -17,7 +17,7 @@ export default async function Header() {
                 departments={departments}
                 header
                />
-                <Link href="/newassignment">
+                <Link href="/newtask">
                     <button className="px-4 py-2.5 bg-primary text-white border-1 border-primary rounded-[5px] cursor-pointer flex items-center gap-1">
                     <Image src="/logos/plus.svg" alt="" width={20} height={20} /> შექმენი ახალი დავალება</button>
                 </Link>

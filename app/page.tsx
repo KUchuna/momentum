@@ -1,5 +1,5 @@
 import { getTasks } from "@/api";
-import Clear from "@/components/Globals/Clear";
+import Clear from "@/components/HomePage/Clear";
 
 export default async function Home() {
   

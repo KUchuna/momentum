@@ -10,7 +10,7 @@ export async function createEmployeeAction(formData: FormData) {
     console.log(error);
   } finally {
     revalidatePath("/")
-    revalidatePath("/newassignment")
+    revalidatePath("/newtask")
   }
 }
 
@@ -21,6 +21,6 @@ export async function createTaskAction(formData: FormData) {
     console.log(error);
   } finally {
     revalidatePath("/")
-    revalidatePath("/newassignment")
+    revalidatePath("/newtask")
   }
 }

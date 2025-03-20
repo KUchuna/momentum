@@ -5,7 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import {useEffect, useState} from "react";
-import NewEmployee from "../Globals/NewEmployee";
+import NewEmployee from "../Header/NewEmployee";
 import { createTaskAction } from "@/app/actions";
 import { useRouter } from "next/navigation";
 
@@ -42,7 +42,7 @@ const schema = z.object({
 });
 
 
-export default function AssignmentForm({priorities, statuses, departments, employees}: {priorities: {id: number, name: string, icon: string}[], statuses: {id: number, name: string}[], departments: {id: number, name: string}[], employees: {id: number, name: string, surname: string, avatar: string, department: {id: number, name: string}}[]}) {
+export default function TaskForm({priorities, statuses, departments, employees}: {priorities: {id: number, name: string, icon: string}[], statuses: {id: number, name: string}[], departments: {id: number, name: string}[], employees: {id: number, name: string, surname: string, avatar: string, department: {id: number, name: string}}[]}) {
     
     const [activeDropDown, setActiveDropDown] = useState<string | null>(null)
 
@@ -197,7 +197,7 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
 
     
     return (
-        <form className="py-[4.063rem] pl-[3.438rem] pr-[23rem] bg-[#FBF9FFA6] rounded-[4px] border-[#DDD2FF] border-[1px]" onSubmit={handleFormSubmit} id="assignment-form">
+        <form className="py-[4.063rem] pl-[3.438rem] pr-[23rem] bg-[#FBF9FFA6] rounded-[4px] border-[#DDD2FF] border-[1px]" onSubmit={handleFormSubmit} id="task-form">
 
             <input 
                 className="hidden"
@@ -371,7 +371,7 @@ export default function AssignmentForm({priorities, statuses, departments, emplo
                     </div>           
                 </div>
             </div>
-            <button className="border-1 border-primary bg-primary px-4 py-[0.688rem] rounded-[10px] text-white cursor-pointer ml-auto block mt-[9rem]" name="assignment-submit" id="assignment-submit" form="assignment-form">დავალების შექმნა</button>
+            <button className="border-1 border-primary bg-primary px-4 py-[0.688rem] rounded-[10px] text-white cursor-pointer ml-auto block mt-[9rem]" name="task-submit" id="task-submit" form="task-form">დავალების შექმნა</button>
         </form>
     )
 }
