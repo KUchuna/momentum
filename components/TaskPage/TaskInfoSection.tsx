@@ -1,5 +1,4 @@
 import { Task } from "@/types"
-import PriorityDepartment from "../HomePage/PriorityDepartment"
 import Image from "next/image"
 import StatusDropDown from "./StatusDropDown"
 import { getStatuses } from "@/api"
