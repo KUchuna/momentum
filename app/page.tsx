@@ -1,8 +1,6 @@
 import { getDepartments, getEmployees, getPriorities, getTasks } from "@/api";
 import Clear from "@/components/HomePage/Clear";
-import Filters from "@/components/HomePage/Filters";
 import FilterShared from "@/components/HomePage/FilterShared";
-import TaskGrid from "@/components/HomePage/TaskGrid";
 import { Tasks } from "@/types";
 
 
