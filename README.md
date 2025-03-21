@@ -7,7 +7,7 @@ A simple **Task Management System** built with **Next.js, TypeScript, Tailwind C
 - ✅ **Create & Manage Tasks** – Add new tasks with priorities and assign them to employees.
 - ✅ **Employee Management** – Create employees and assign tasks to them.
 - ✅ **Persistent Filtering with URL Search Params** – Filters persist in the URL, allowing users to share filtered views.
-- ✅ **Real-Time Form Validation** – Uses **Zod & React Hook Form** for validation.
+- ✅ **Real-Time Form Validation** – Uses **Zod** for validation.
 - ✅ **Built with Next.js & Tailwind CSS** – Ensures a modern, fast, and responsive UI.
 
 ---
@@ -17,7 +17,6 @@ A simple **Task Management System** built with **Next.js, TypeScript, Tailwind C
 - **Next.js** – Server-side rendering and API routes.
 - **Tailwind CSS** – For styling the UI.
 - **TypeScript** – Strict type safety.
-- **React Hook Form** – Handles form submissions.
 - **Zod** – Schema validation for form fields.
 
 ---
