@@ -1,7 +1,7 @@
 "use client";
 
 import { Department, Employee, Priority } from "@/types";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 
@@ -14,12 +14,28 @@ interface FiltersProps {
 export default function Filters({ departments, priorities, employees }: FiltersProps) {
     const [openFilter, setOpenFilter] = useState<string | null>(null);
 
+    const filterRef = useRef<HTMLUListElement>(null);
+
     const toggleFilter = (e: React.MouseEvent<HTMLLIElement>, filter: string) => {
         if (!(e.target as HTMLElement).classList.contains("filter-item")) {
             return;
         }
         setOpenFilter((prev) => (prev === filter ? null : filter));
     };
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
+                setOpenFilter(null);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
 
     const searchParams = useSearchParams();
     const pathname = usePathname();
@@ -42,15 +58,15 @@ export default function Filters({ departments, priorities, employees }: FiltersP
         setOpenFilter(null)
     }
 
-    useEffect(() => {
-        const selectedDepartments = JSON.parse(searchParams.get('departments') || '[]');
-        const selectedPriorities = JSON.parse(searchParams.get('priorities') || '[]');
-        const selectedEmployees = JSON.parse(searchParams.get('employees') || '[]');
-        console.log(selectedDepartments, selectedPriorities, selectedEmployees);
-    }, []);
+    function isChecked(filterType: string, id: string) {
+        const values = searchParams.get(filterType);
+        return values ? JSON.parse(values).includes(id) : false;
+    }
+
+
 
     return (
-        <ul className="flex gap-[6rem] border border-[#DEE2E6] w-fit rounded-[10px] mb-[25px]">
+        <ul className="flex gap-[6rem] border border-[#DEE2E6] w-fit rounded-[10px] mb-[25px]" ref={filterRef}>
             <li className={`filter-item flex items-center gap-2 cursor-pointer relative pl-[1.125rem] py-3 ${openFilter === "department" ? "text-primary" : ""} select-none`} onClick={(e) => toggleFilter(e, "department")}>
                 დეპარტამენტი <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={`${openFilter === "department" ? "rotate-180 transition-transform duration-100" : ""}`}>
                     <path d="M6.70711 8.29289C6.31658 7.90237 5.68342 7.90237 5.29289 8.29289C4.90237 8.68342 4.90237 9.31658 5.29289 9.70711L11.2929 15.7071C11.6834 16.0976 12.3166 16.0976 12.7071 15.7071L18.7071 9.70711C19.0976 9.31658 19.0976 8.68342 18.7071 8.29289C18.3166 7.90237 17.6834 7.90237 17.2929 8.29289L12 13.5858L6.70711 8.29289Z" fill="currentColor" />
@@ -64,7 +80,7 @@ export default function Filters({ departments, priorities, employees }: FiltersP
                                     <label htmlFor={`department-${department.id}`} className="w-max cursor-pointer">
                                         {department.name}
                                     </label>
-                                    <input type="checkbox" id={`department-${department.id}`} name="department" value={department.id} className="cursor-pointer" />
+                                    <input type="checkbox" id={`department-${department.id}`} name="department" value={department.id} className="cursor-pointer" defaultChecked={isChecked('departments', department.id.toString())}/>
                                 </div>
                             );
                         })}
@@ -84,7 +100,7 @@ export default function Filters({ departments, priorities, employees }: FiltersP
                                     <label htmlFor={`priority-${priority.id}`} className="w-max cursor-pointer">
                                         {priority.name}
                                     </label>
-                                    <input type="checkbox" id={`priority-${priority.id}`} name="priority" value={priority.id} className="cursor-pointer" />
+                                    <input type="checkbox" id={`priority-${priority.id}`} name="priority" value={priority.id} className="cursor-pointer" defaultChecked={isChecked('priorities', priority.id.toString())}/>
                                 </div>
                             );
                         })}
@@ -115,7 +131,7 @@ export default function Filters({ departments, priorities, employees }: FiltersP
                                         </div>
                                         {employee.name + " " + employee.surname}
                                     </label>
-                                    <input type="checkbox" id={`employee-${employee.id}`} name="employee" value={employee.id} className="cursor-pointer" />
+                                    <input type="checkbox" id={`employee-${employee.id}`} name="employee" value={employee.id} className="cursor-pointer" defaultChecked={isChecked('employees', employee.id.toString())}/>
                                 </div>
                             );
                         })}
