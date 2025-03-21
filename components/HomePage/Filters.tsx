@@ -114,6 +114,7 @@ export default function Filters({ departments, priorities, employees }: FiltersP
 
     function clearAllFilters() {
         replace(pathname);
+        setSelectedEmployee(null)
     }
 
     const activeFilters = getActiveFilters();
