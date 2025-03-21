@@ -108,7 +108,9 @@ export default function Filters({ departments, priorities, employees }: FiltersP
                 params.delete(filterType);
             }
         }
-
+        if (filterType == "employees") {
+            setSelectedEmployee(null)
+        }
         replace(`${pathname}?${params.toString()}`);
     }
 
