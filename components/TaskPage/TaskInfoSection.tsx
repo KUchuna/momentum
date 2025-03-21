@@ -62,7 +62,7 @@ export default async function TaskInfoSection({task}: TaskInfoSectionProps) {
                             თანამშრომელი
                         </div>
                         <div className="flex items-center gap-3 w-1/2">
-                            <Image src={task.employee.avatar} width={31} height={31} alt="NO" className="min-w-[31px] max-w-[31px] min-h-[31px] max-h-[31px] object-cover rounded-full" />
+                            <Image src={task.employee.avatar} width={31} height={31} alt="NO" className="min-w-[31px] max-w-[31px] min-h-[31px] max-h-[31px] object-cover rounded-full" quality={100} priority/>
                             <div className="flex flex-col w-1/2 min-w-max">
                                 <span className="font-light text-[11px] text-[#474747]">{task.department.name}</span>
                                 <span className="text-[14px]">{task.employee.name} {task.employee.surname}</span>

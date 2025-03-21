@@ -59,10 +59,14 @@ export default function Comments({comments, taskId}: {comments: CommentWithSubCo
         }
     }
 
+    const totalComments = comments.reduce(
+        (acc, comment) => acc + 1 + (comment.sub_comments?.length || 0),
+        0
+      );
 
     return (
         <div className="mt-[4.125rem]">
-            <h4 className="text-[1.25rem] font-medium flex items-center gap-[0.438rem] mb-10">კომენტარები <span className="bg-primary text-white px-[0.688rem] rounded-[30px] font-medium text-[14px]">{comments.length}</span></h4>
+            <h4 className="text-[1.25rem] font-medium flex items-center gap-[0.438rem] mb-10">კომენტარები <span className="bg-primary text-white px-[0.688rem] rounded-[30px] font-medium text-[14px]">{totalComments}</span></h4>
             <div className="max-h-[600px] overflow-y-scroll flex flex-col gap-[2.375rem] pr-[1.407rem]" id="comments">
                 {comments.map((comment, index) => {
                     return (

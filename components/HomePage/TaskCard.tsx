@@ -53,8 +53,10 @@ export default function TaskCard({task}: TaskCardProps) {
         return null
     }
 
+    console.log(task)
+
     return (
-        <div className="flex flex-col p-[1.25rem] border rounded-[15px] cursor-pointer h-[230px]" style={{borderColor: statusColor()}} onClick={() => handleClick()}>
+        <div className="flex flex-col p-[1.25rem] border rounded-[15px] cursor-pointer h-[260px]" style={{borderColor: statusColor()}} onClick={() => handleClick()}>
             <div className="flex min-w-max justify-between mb-[1.75rem]">
                 <PriorityDepartment 
                     priority={task.priority}
@@ -65,9 +67,10 @@ export default function TaskCard({task}: TaskCardProps) {
             <h3 className="mb-[0.75rem] text-[15px] font-bold">{task.name.slice(0,50)}</h3>
             <p className="text-[#343A40] text-[14px] mb-[1.75rem]">{task.description?.slice(0, 90)}{task.description?.length > 90 ? "..." : ""}</p>
             <div className="flex justify-between items-center mt-auto">
-                <Image src={task.employee.avatar} width={31} height={31} alt="NO" className="min-w-[31px] max-w-[31px] min-h-[31px] max-h-[31px] object-cover rounded-full" />
-                <div>
+                <Image src={task.employee.avatar} width={31} height={31} alt="NO" className="min-w-[31px] max-w-[31px] min-h-[31px] max-h-[31px] object-cover rounded-full" priority quality={100}/>
+                <div className="flex gap-1">
                     <Image src="/logos/comments.svg" alt="" width={22} height={22} />
+                    {task.total_comments}
                 </div>
             </div>
         </div>

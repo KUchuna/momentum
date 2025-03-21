@@ -7,6 +7,7 @@ export interface Task {
     priority: {id: number, name: string, icon: string}, 
     department: {id: number, name: string}, 
     employee: {id: number, name: string, surname: string, avatar: string, department_id: number}
+    total_comments: number
 }
 
 export type Tasks = Task[]
