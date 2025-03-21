@@ -33,7 +33,9 @@ export default function StatusDropDown({status, statuses, taskId}: StatusDropDow
 
     return (
         <div className={`bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] cursor-pointer w-1/2 min-w-max select-none`} onClick={() => toggleDropDown()}>
-            {status.name}
+            <span className="text-sm font-light">
+                {status.name}
+            </span>
             <Image src="/logos/downarrow.svg" alt="" width={14} height={14} className="ml-auto"/>
             {showDropDown && <div className="bg-white absolute left-0 origin-top-left bottom-0 translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10 min-w-max select-none">
                 {statuses.map((status, index) => {

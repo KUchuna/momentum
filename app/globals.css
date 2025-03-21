@@ -171,3 +171,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     display: none;
     -webkit-appearance: none;
 }
+
+#comments::-webkit-scrollbar {
+    width: 4px;
+}
+
+#comments::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary);
+    border-radius: 4px;
+}
+
+#comments::-webkit-scrollbar-track {
+    background: transparent;
+}

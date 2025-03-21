@@ -180,7 +180,6 @@ export default function TaskForm({priorities, statuses, departments, employees}:
                 }
             });
             setSubmitErrors(fieldErrors);
-            console.log(submitErrors)
             return;
         }
         

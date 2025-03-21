@@ -84,3 +84,38 @@ export async function updateStatus(taskId: number, statusId: number) {
     });
     return response.json();
 }
+
+export async function getComments(taskId: string) {
+    const response = await fetch(`https://momentum.redberryinternship.ge/api/tasks/${taskId}/comments`, {
+        cache: 'no-store',
+        headers: {
+            'Authorization': `Bearer ${REDBERRY_API_TOKEN}`, 
+        }
+    })
+    return response.json()  
+}
+
+export async function createComment(taskId: string, formData:FormData) {
+    const response = await fetch(`https://momentum.redberryinternship.ge/api/tasks/${taskId}/comments`, {
+        method: "POST",
+        headers: {
+            'Authorization': `Bearer ${REDBERRY_API_TOKEN}`, 
+        },
+        body: formData,
+    });
+    return response.json();
+}
+
+export async function createReply(taskId: string, formData: FormData, parentId: number) {
+    formData.append("parent_id", parentId.toString());
+
+    const response = await fetch(`https://momentum.redberryinternship.ge/api/tasks/${taskId}/comments`, {
+        method: "POST",
+        headers: {
+            'Authorization': `Bearer ${REDBERRY_API_TOKEN}`, 
+        },
+        body: formData,
+    });
+
+    return response.json();
+}

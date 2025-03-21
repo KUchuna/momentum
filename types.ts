@@ -10,3 +10,16 @@ export interface Task {
 }
 
 export type Tasks = Task[]
+
+export interface TaskComment {
+    id: number;
+    text: string;
+    task_id: number;
+    parent_id?: number;
+    author_avatar: string;
+    author_nickname: string;
+}
+
+export interface CommentWithSubComments extends TaskComment {
+    sub_comments?: TaskComment[]; 
+}
