@@ -276,7 +276,7 @@ export default function TaskForm({priorities, statuses, departments, employees}:
                                     <Image src={selectedPriority.icon} alt="" width={16} height={18} />{selectedPriority.name}
                                 </div>
                                 <Image src="/logos/downarrow.svg" alt="" width={14} height={14} className="ml-auto"/>
-                                {activeDropDown == "priority" && <div className="bg-white absolute left-0 origin-top-left bottom-0 translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10">
+                                {activeDropDown == "priority" && <div className="bg-white absolute left-0 origin-top-left bottom-[-2px] translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10">
                                     {priorities.map((priority, index) => {
                                         return (
                                             <p key={index} className="p-[0.875rem] text-sm font-light hover:bg-gray-50 flex gap-[0.375rem]" onClick={() => handlePriorityChange(priority)} >
@@ -291,7 +291,7 @@ export default function TaskForm({priorities, statuses, departments, employees}:
                             <div className={`bg-white border-[1px] border-[#DEE2E6] relative rounded-[5px] h-[46px] flex items-center p-[0.875rem] cursor-pointer min-w-max ${errors.status_id ? "border-red-main" : ""}`} onClick={() => toggleDropDown("status")}>
                                 {selectedStatus.name}
                                 <Image src="/logos/downarrow.svg" alt="" width={14} height={14} className="ml-auto"/>
-                                {activeDropDown == "status" && <div className="bg-white absolute left-0 origin-top-left bottom-0 translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10 min-w-max">
+                                {activeDropDown == "status" && <div className="bg-white absolute left-0 origin-top-left bottom-[-2px] translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10 min-w-max">
                                     {statuses.map((status, index) => {
                                         return (
                                             <p key={index} className="p-[0.875rem] text-sm font-light hover:bg-gray-50 flex gap-[0.375rem]" onClick={() => handleStatusChange(status)} >{status.name}</p>
@@ -336,7 +336,7 @@ export default function TaskForm({priorities, statuses, departments, employees}:
                                
                             <Image src="/logos/downarrow.svg" alt="" width={14} height={14} className="ml-auto"/>
                             {activeDropDown == "employee" &&
-                                <div className="bg-white absolute left-0 origin-top-left bottom-[-1px] translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10 min-w-max">
+                                <div className="bg-white absolute left-0 origin-top-left bottom-[-2px] translate-y-[100%] w-full border-[1px] border-[#DEE2E6] rounded-[5px] z-10 min-w-max">
                                     <div onClick={(e) => (e.stopPropagation())}>
                                         <NewEmployee 
                                             departments={departments}

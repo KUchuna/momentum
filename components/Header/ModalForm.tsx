@@ -234,7 +234,7 @@ export default function ModalForm({departments, setShowModal}: {departments: {na
                         </span>
                         <Image src="/logos/downarrow.svg" alt="" width={14} height={14} className="ml-auto"/>
                         {dropDown && 
-                            <div className={`absolute left-0 bg-white w-full origin-top-left -bottom-[1px] translate-y-[100%] border-1 border-[#CED4DA] rounded-[6px] z-10 max-h-[200px] select-none overflow-y-auto`}>
+                            <div className={`absolute left-0 bg-white w-full origin-top-left bottom-[-2px] translate-y-[100%] border-1 border-[#CED4DA] rounded-[6px] z-10 max-h-[200px] select-none overflow-y-auto`}>
                                 {departments.map((item: {name: string, id:number}, index: number) => {
                                     return (
                                         <p key={index} className="p-[0.875rem] text-sm font-light hover:bg-gray-50" onClick={() => handleDepartment(item.id, item.name)}>{item.name}</p>
