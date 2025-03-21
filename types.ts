@@ -24,3 +24,23 @@ export interface TaskComment {
 export interface CommentWithSubComments extends TaskComment {
     sub_comments?: TaskComment[]; 
 }
+
+export interface Department {
+    id: number, 
+    name: string
+}
+
+export interface Priority {
+    id: number, 
+    name: string
+    icon: string, 
+} 
+
+export interface Employee {
+    id: number,
+    name: string, 
+    surname: string, 
+    avatar: string, 
+    department_id: number
+}
+
